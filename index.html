@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+<style>
+
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    color-scheme: dark;
+    font-family: "Exo 2", sans-serif;
+}
+h1{
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+    text-align: center;
+
+}
+p{
+    font-family: "Source Code Pro", serif;
+}
+.grid_container{
+    display: grid;
+    margin: 1rem;
+    display: grid;
+    grid-auto-columns: 1fr;
+    gap: .5rem;
+    grid-template-areas: 
+    "box1 box2 box3"
+    ;
+}
+.container{
+    border-radius: 1rem;
+    border: solid grey 1px;
+    height: 95vh;
+}
+.container_main{
+    grid-area: box1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.container_user{
+    grid-area: box2;
+    padding: 1rem;
+}
+.container_historical{
+    grid-area: box3;
+    padding: 1rem;
+}
+.container_container{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    border: 1px white solid;
+    border-radius:1rem ;
+    padding: 1rem;
+
+}
+label , input {
+    margin: 0.3rem;
+
+}
+button{
+    padding: 1rem;
+    border-radius: 1rem;
+    background-color: rgb(200, 200, 200);
+    color: black;
+    font-size: 1rem;
+}
+.validation_buttun{
+    font-size: .8rem;
+    padding: .5rem;
+    margin-top: 1rem;
+}
+.used{
+    background-color: rgb(59, 59, 59);
+    color: grey;
+}
+.hidden{
+    display: none;
+}
+.container_buttun{
+    margin-top: 3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+#usertimerInput{
+    background-color: white;
+    height: 10px;
+    display: flex;
+    width: 0%;
+}
+</style>
+</head>
+<body>
+
+<main class="grid_container">
+    <section class="container container_main">
+
+        <h1>Ecran de contrôle de la machine temporelle</h1>
+
+        <article class="container_container container_connexion">
+            <label for="identity">Identifiant</label>
+            <input type="text" name="identity" id="identityInput">
+    
+            <label for="password">Mot de Passe (10 caractères minimum)</label>
+            <input type="password" name="password" id="passwordInput"> 
+
+            <button class="validation_buttun" id="validationInput">Valider</button>
+
+            <a href="password.html" id="forgetInput">Mot de passe oublié</a>
+            <button class="validation_buttun" id="deconnectionInput">Déconnecter</button>
+        </article>
+
+        <article  class="container_buttun">
+            <button id="startInput">Lancer la machine</button>
+            <button id="accessInput">Voir les accès à la machine</button>
+            <button id="historicalInput">Voir l'historique d'utilisation</button>
+        </article>
+
+    </section>
+
+    <section class="container container_user">
+        <span id="usertimerInput"></span>
+        <article id="user">
+            <h1>Accès validés par le Père Noël</h1>
+
+            <p>pere.noel: Accès autorisé</p>
+            <p>guilty.lutin: Accès autorisé</p>    
+        </article>
+    </section>
+
+    <section class="container container_historical">
+        <span id="historicaltimerInput"></span>
+        <article id="historical">
+            <h1>Historique des connexions</h1>
+            <p>time_____date_______identity_______</p>
+            <p>17:06:24  23/12/2024 id:guilty.lutin</p>
+            <p>23:56:29  24/12/2023 id:pere.noel</p>
+            <p>00:00:12  24/12/2022 id:pere.noel</p>
+            <p>23:59:56  24/12/2021 id:pere.noel</p>
+            <p>23:57:43  24/12/2020 id:pere.noel</p>
+            <p>23:55:31  24/12/2019 id:pere.noel</p>
+            <p>...</p>
+        </article>
+
+
+    </section>
+</main>
+
+<script>
+let identityEl = document.querySelector('#identityInput');
+let passwordEl = document.querySelector('#passwordInput');
+let userEl = document.querySelector('#user');
+let historicalEl = document.querySelector('#historical');
+let usertimerEl = document.querySelector('#usertimerInput');
+let historicaltimerEl = document.querySelector('#historicaltimerInput');
+
+var validationButtun = document.querySelector('#validationInput');
+var forgetButtun = document.querySelector('#forgetInput');
+var deconnectionButtun = document.querySelector('#deconnectionInput');
+
+var startButtun = document.querySelector('#startInput');
+var accessButtun = document.querySelector('#accessInput');
+var historicalButtun = document.querySelector('#historicalInput');
+
+let isRunning = false;
+
+startButtun.classList.add('hidden');
+accessButtun.classList.add('hidden');
+historicalButtun.classList.add('hidden');
+deconnectionButtun.classList.add('hidden');
+
+userEl.classList.add('hidden');
+historicalEl.classList.add('hidden');
+
+
+deconnectionButtun.addEventListener("click",()=> {
+    location.reload();
+})
+
+validationButtun.addEventListener("click", () =>{
+    if(identityEl.value = "pere.noel"){
+        if(passwordEl.value = "password"){
+            validationButtun.textContent = ("Validé");
+            validationButtun.classList.add('hidden');
+            forgetButtun.classList.add('hidden');
+            startButtun.classList.remove('hidden');
+            accessButtun.classList.remove('hidden');
+            historicalButtun.classList.remove('hidden');
+            deconnectionButtun.classList.remove('hidden');
+            return
+        }
+    }
+})
+
+accessButtun.addEventListener("click", ()=> {
+    startimerUser();
+})
+
+function startimerUser (){
+    let progression = 0;
+    
+    if(!isRunning){
+        window.setInterval(() => {
+            let isRunning = true;
+            progression = progression + 1;
+            usertimerEl.style.width = progression+'%';
+            if (progression > 100){
+                progression=100;
+                usertimerEl.classList.add('hidden');
+                userEl.classList.remove('hidden');
+                console.log(100);
+                
+                return;
+            }
+        }, 100);
+    }
+     
+    
+}
+
+</script>
+</body>
+</html>
