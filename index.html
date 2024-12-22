@@ -17,17 +17,27 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
-    color-scheme: dark;
+    color: white;
     font-family: "Exo 2", sans-serif;
+}
+body{
+    background-color: rgb(115, 0, 0);
+}
+input{
+    color: black;
 }
 h1{
     margin-top: 3rem;
     margin-bottom: 3rem;
     text-align: center;
+    background-color: black;
 
 }
 p{
     font-family: "Source Code Pro", serif;
+}
+a{
+    color: rgb(169, 169, 255);
 }
 .grid_container{
     display: grid;
@@ -41,8 +51,9 @@ p{
 }
 .container{
     border-radius: 1rem;
-    border: solid grey 1px;
+    border: solid rgb(255, 255, 255) 1px;
     height: 95vh;
+    background-color: black;
 }
 .container_main{
     grid-area: box1;
@@ -58,13 +69,14 @@ p{
     grid-area: box3;
     padding: 1rem;
 }
-.container_container{
+.container_connexion{
     width: 50%;
     display: flex;
     flex-direction: column;
     border: 1px white solid;
     border-radius:1rem ;
     padding: 1rem;
+    background-color: rgb(79, 0, 0);
 
 }
 label , input {
@@ -78,7 +90,7 @@ button{
     color: black;
     font-size: 1rem;
 }
-.validation_buttun{
+.validation_deconnection{
     font-size: .8rem;
     padding: .5rem;
     margin-top: 1rem;
@@ -96,7 +108,7 @@ button{
     flex-direction: column;
     gap: 1rem;
 }
-#usertimerInput{
+#usertimerInput, #historicaltimerInput{
     background-color: white;
     height: 10px;
     display: flex;
@@ -111,21 +123,21 @@ button{
 
         <h1>Ecran de contrôle de la machine temporelle</h1>
 
-        <article class="container_container container_connexion">
+        <article class="container_connexion">
             <label for="identity">Identifiant</label>
             <input type="text" name="identity" id="identityInput">
     
             <label for="password">Mot de Passe (10 caractères minimum)</label>
             <input type="password" name="password" id="passwordInput"> 
 
-            <button class="validation_buttun" id="validationInput">Valider</button>
+            <button class="validation_deconnection" id="validation_buttun">Valider</button>
 
             <a href="password.html" id="forgetInput">Mot de passe oublié</a>
-            <button class="validation_buttun" id="deconnectionInput">Déconnecter</button>
+            <button class="validation_deconnection" id="deconnectionInput">Déconnecter</button>
         </article>
 
         <article  class="container_buttun">
-            <button id="startInput">Lancer la machine</button>
+            <button class="used" id="startInput">Lancer la machine</button>
             <button id="accessInput">Voir les accès à la machine</button>
             <button id="historicalInput">Voir l'historique d'utilisation</button>
         </article>
@@ -161,14 +173,17 @@ button{
 </main>
 
 <script>
-let identityEl = document.querySelector('#identityInput');
-let passwordEl = document.querySelector('#passwordInput');
+const identityEl = document.querySelector('input[name="identity"]');
+const passwordEl = document.querySelector('input[name="password"]');
+
+
+
+let validationButtun = document.querySelector('#validation_buttun');
 let userEl = document.querySelector('#user');
 let historicalEl = document.querySelector('#historical');
 let usertimerEl = document.querySelector('#usertimerInput');
 let historicaltimerEl = document.querySelector('#historicaltimerInput');
 
-var validationButtun = document.querySelector('#validationInput');
 var forgetButtun = document.querySelector('#forgetInput');
 var deconnectionButtun = document.querySelector('#deconnectionInput');
 
@@ -177,6 +192,7 @@ var accessButtun = document.querySelector('#accessInput');
 var historicalButtun = document.querySelector('#historicalInput');
 
 let isRunning = false;
+let isrunning = false;
 
 startButtun.classList.add('hidden');
 accessButtun.classList.add('hidden');
@@ -191,9 +207,13 @@ deconnectionButtun.addEventListener("click",()=> {
     location.reload();
 })
 
-validationButtun.addEventListener("click", () =>{
-    if(identityEl.value = "pere.noel"){
-        if(passwordEl.value = "password"){
+validationButtun.addEventListener("click",()=> {
+    verificate();
+})
+
+function verificate() {
+    if(identityEl.value == "pere.noel"){
+        if(passwordEl.value == "noel"){
             validationButtun.textContent = ("Validé");
             validationButtun.classList.add('hidden');
             forgetButtun.classList.add('hidden');
@@ -201,10 +221,16 @@ validationButtun.addEventListener("click", () =>{
             accessButtun.classList.remove('hidden');
             historicalButtun.classList.remove('hidden');
             deconnectionButtun.classList.remove('hidden');
-            return
+            return;
+        }
+        else {
+            return;
         }
     }
-})
+    else {
+        return;
+    }
+}
 
 accessButtun.addEventListener("click", ()=> {
     startimerUser();
@@ -216,20 +242,43 @@ function startimerUser (){
     if(!isRunning){
         window.setInterval(() => {
             let isRunning = true;
-            progression = progression + 1;
+            progression = progression + .1 ;
             usertimerEl.style.width = progression+'%';
             if (progression > 100){
                 progression=100;
                 usertimerEl.classList.add('hidden');
                 userEl.classList.remove('hidden');
-                console.log(100);
+                console.log("access");
                 
                 return;
             }
-        }, 100);
+        }, 1800);
     }
-     
+}
+
+historicalButtun.addEventListener("click", ()=> {
+    startimerHistorical();
+    console.log("buttun");
+})
+
+function startimerHistorical (){
+    let progressionH = 0;
     
+    if(!isrunning){
+        window.setInterval(() => {
+            let isrunning = true;
+            progressionH = progressionH + .1;
+            historicaltimerEl.style.width = progressionH +'%';
+            if (progressionH > 100){
+                progressionH = 100;
+                historicaltimerEl.classList.add('hidden');
+                historicalEl.classList.remove('hidden');
+                console.log("historical");
+                
+                return;
+            }
+        }, 7200);
+    }
 }
 
 </script>
