@@ -46,7 +46,7 @@ a{
     grid-auto-columns: 1fr;
     gap: .5rem;
     grid-template-areas: 
-    "box1 box2 box3"
+    "box0 box1 box2 box3"
     ;
 }
 .container{
@@ -56,6 +56,12 @@ a{
     background-color: black;
 }
 .container_main{
+    grid-area: box0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.container_system{
     grid-area: box1;
     display: flex;
     flex-direction: column;
@@ -141,11 +147,15 @@ button{
             <button id="accessInput">Voir les accès à la machine</button>
             <button id="historicalInput">Voir l'historique d'utilisation</button>
         </article>
+    </section>
+
+    <section class="container container_system">
 
     </section>
 
     <section class="container container_user">
         <span id="usertimerInput"></span>
+        <p id="waitinguserInput">chargement...</p>
         <article id="user">
             <h1>Accès validés par le Père Noël</h1>
 
@@ -156,15 +166,22 @@ button{
 
     <section class="container container_historical">
         <span id="historicaltimerInput"></span>
+        <p id="waitinghistoricalInput">chargement...</p>
         <article id="historical">
             <h1>Historique des connexions</h1>
             <p>time_____date_______identity_______</p>
-            <p>17:06:24  23/12/2024 id:guilty.lutin</p>
+            <p>15:03:55  24/12/2024 id:guilty.lutin</p>
+            <p>10:15:24  24/12/2024 id:fripon.lutin</p>
             <p>23:56:29  24/12/2023 id:pere.noel</p>
-            <p>00:00:12  24/12/2022 id:pere.noel</p>
+            <p>11:34:23  24/12/2023 id:fripon.lutin</p>
+            <p>23:53:14  24/12/2022 id:pere.noel</p>
+            <p>10:00:12  24/12/2022 id:pere.noel</p>
             <p>23:59:56  24/12/2021 id:pere.noel</p>
+            <p>09:45:46  24/12/2021 id:fripon.lutin</p>
             <p>23:57:43  24/12/2020 id:pere.noel</p>
+            <p>12:25:34  24/12/2020 id:fripon.lutin</p>
             <p>23:55:31  24/12/2019 id:pere.noel</p>
+            <p>08:34:32  24/12/2019 id:pere.noel</p>
             <p>...</p>
         </article>
 
@@ -184,6 +201,9 @@ let historicalEl = document.querySelector('#historical');
 let usertimerEl = document.querySelector('#usertimerInput');
 let historicaltimerEl = document.querySelector('#historicaltimerInput');
 
+let waitinguserEl = document.querySelector('#waitinguserInput');
+let waitinghistoricalEl = document.querySelector('#waitinghistoricalInput');
+
 var forgetButtun = document.querySelector('#forgetInput');
 var deconnectionButtun = document.querySelector('#deconnectionInput');
 
@@ -202,6 +222,8 @@ deconnectionButtun.classList.add('hidden');
 userEl.classList.add('hidden');
 historicalEl.classList.add('hidden');
 
+waitinguserEl.classList.add('hidden');
+waitinghistoricalEl.classList.add('hidden');
 
 deconnectionButtun.addEventListener("click",()=> {
     location.reload();
@@ -241,6 +263,7 @@ function startimerUser (){
     
     if(!isRunning){
         window.setInterval(() => {
+            waitinguserEl.classList.remove('hidden');
             let isRunning = true;
             progression = progression + .1 ;
             usertimerEl.style.width = progression+'%';
@@ -248,6 +271,7 @@ function startimerUser (){
                 progression=100;
                 usertimerEl.classList.add('hidden');
                 userEl.classList.remove('hidden');
+                waitinguserEl.classList.add('hidden');
                 console.log("access");
                 
                 return;
@@ -266,6 +290,7 @@ function startimerHistorical (){
     
     if(!isrunning){
         window.setInterval(() => {
+            waitinghistoricalEl.classList.remove('hidden');
             let isrunning = true;
             progressionH = progressionH + .1;
             historicaltimerEl.style.width = progressionH +'%';
@@ -273,6 +298,7 @@ function startimerHistorical (){
                 progressionH = 100;
                 historicaltimerEl.classList.add('hidden');
                 historicalEl.classList.remove('hidden');
+                waitinghistoricalEl.classList.add('hidden');
                 console.log("historical");
                 
                 return;
