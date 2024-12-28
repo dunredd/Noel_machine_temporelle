@@ -30,7 +30,6 @@ h1{
     margin-top: 3rem;
     margin-bottom: 3rem;
     text-align: center;
-    background-color: black;
 
 }
 p{
@@ -53,7 +52,7 @@ a{
     border-radius: 1rem;
     border: solid rgb(255, 255, 255) 1px;
     height: 95vh;
-    background-color: black;
+    background-color: rgb(17, 17, 17);
 }
 .container_main{
     grid-area: box0;
@@ -63,9 +62,7 @@ a{
 }
 .container_system{
     grid-area: box1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    padding: 1rem;
 }
 .container_user{
     grid-area: box2;
@@ -76,7 +73,7 @@ a{
     padding: 1rem;
 }
 .container_connexion{
-    width: 50%;
+    width: 60%;
     display: flex;
     flex-direction: column;
     border: 1px white solid;
@@ -87,6 +84,7 @@ a{
 }
 label , input {
     margin: 0.3rem;
+    font-family:"Source Code Pro", serif; 
 
 }
 button{
@@ -104,6 +102,7 @@ button{
 .used{
     background-color: rgb(59, 59, 59);
     color: grey;
+    margin: .5rem;
 }
 .hidden{
     display: none;
@@ -120,6 +119,9 @@ button{
     display: flex;
     width: 0%;
 }
+.container_range{
+    display: flex;
+}
 </style>
 </head>
 <body>
@@ -127,13 +129,13 @@ button{
 <main class="grid_container">
     <section class="container container_main">
 
-        <h1>Ecran de contrôle de la machine temporelle</h1>
+        <h1>Machine temporelle ChronoStella V3.2</h1>
 
         <article class="container_connexion">
             <label for="identity">Identifiant</label>
             <input type="text" name="identity" id="identityInput">
     
-            <label for="password">Mot de Passe (10 caractères minimum)</label>
+            <label for="password">Mot de Passe</label>
             <input type="password" name="password" id="passwordInput"> 
 
             <button class="validation_deconnection" id="validation_buttun">Valider</button>
@@ -143,14 +145,35 @@ button{
         </article>
 
         <article  class="container_buttun">
-            <button class="used" id="startInput">Lancer la machine</button>
             <button id="accessInput">Voir les accès à la machine</button>
             <button id="historicalInput">Voir l'historique d'utilisation</button>
         </article>
     </section>
 
     <section class="container container_system">
+        <article id="containersystemInput">
+            <h1>Vérification du système</h1>
+            <p>Energie <i>Connecté</i></p>
+            <p>Cristal rouge: <i>Connecté</i></p>
+            <p>Cristal blanc: <i>Connecté</i></p>
+            <p>Cristal vert: <i>Connecté</i></p>
+            <h1>Paramètres</h1>
+            <label for="choosetimerInput">Choisir le temps de pause:</label>
+            <div class="container_range">
+                <input type="range" name="choosetimerInput"
+                value="0"
+                min="0"
+                max="12"
+                step="0.1">
+                <p id="choosetimerButtun">0</p>
+                <p>heures</p>
+            </div>
 
+            <p>Estimation de chargement: <i>01:00:00</i></p>
+            <p>Dernière utilisation: <i>15:02:26</i></p>
+            <button class="used" id="startInput">Lancer le Coeur temporelle</button>
+            <button class="used" id="stopInput">Arrêter le Coeur temporelle</button>
+        </article>
     </section>
 
     <section class="container container_user">
@@ -160,7 +183,12 @@ button{
             <h1>Accès validés par le Père Noël</h1>
 
             <p>pere.noel: Accès autorisé</p>
-            <p>guilty.lutin: Accès autorisé</p>    
+            <p>turbibricot.lutin: Accès autorisé</p>
+            <p>tonton.noel: Accès autorisé</p>
+            <p>fils.noel: Accès autorisé</p>
+            <p>fripon.lutin: Accès autorisé</p>
+            <p>farfouille.lutin: Accès autorisé</p>
+            <p>flocon.noel: Accès autorisé</p>    
         </article>
     </section>
 
@@ -170,9 +198,10 @@ button{
         <article id="historical">
             <h1>Historique des connexions</h1>
             <p>time_____date_______identity_______</p>
-            <p>15:03:55  24/12/2024 id:guilty.lutin</p>
-            <p>10:15:24  24/12/2024 id:fripon.lutin</p>
-            <p>23:56:29  24/12/2023 id:pere.noel</p>
+            <p>18:OO:55  24/12/2024 id:pere.noel</p>
+            <p>15:01:32  24/12/2024 id:farfouille.lutin</p>
+            <p>10:14:24  24/12/2024 id:fripon.lutin</p>
+            <p>23:59:59  24/12/2023 id:pere.noel</p>
             <p>11:34:23  24/12/2023 id:fripon.lutin</p>
             <p>23:53:14  24/12/2022 id:pere.noel</p>
             <p>10:00:12  24/12/2022 id:pere.noel</p>
@@ -193,7 +222,8 @@ button{
 const identityEl = document.querySelector('input[name="identity"]');
 const passwordEl = document.querySelector('input[name="password"]');
 
-
+const timerRangeEl = document.querySelector('input[name="choosetimerInput"]');
+let timerEl = document.querySelector('#choosetimerButtun');
 
 let validationButtun = document.querySelector('#validation_buttun');
 let userEl = document.querySelector('#user');
@@ -208,6 +238,9 @@ var forgetButtun = document.querySelector('#forgetInput');
 var deconnectionButtun = document.querySelector('#deconnectionInput');
 
 var startButtun = document.querySelector('#startInput');
+var stopButtun = document.querySelector('#stopInput');
+var systemEl = document.querySelector('#containersystemInput');
+
 var accessButtun = document.querySelector('#accessInput');
 var historicalButtun = document.querySelector('#historicalInput');
 
@@ -215,6 +248,8 @@ let isRunning = false;
 let isrunning = false;
 
 startButtun.classList.add('hidden');
+stopButtun.classList.add('hidden');
+systemEl.classList.add('hidden');
 accessButtun.classList.add('hidden');
 historicalButtun.classList.add('hidden');
 deconnectionButtun.classList.add('hidden');
@@ -224,6 +259,11 @@ historicalEl.classList.add('hidden');
 
 waitinguserEl.classList.add('hidden');
 waitinghistoricalEl.classList.add('hidden');
+
+timerRangeEl.addEventListener("input", ()=>{
+    let timerRange = timerRangeEl.value;
+    timerEl.textContent = timerRange; 
+})
 
 deconnectionButtun.addEventListener("click",()=> {
     location.reload();
@@ -235,14 +275,119 @@ validationButtun.addEventListener("click",()=> {
 
 function verificate() {
     if(identityEl.value == "pere.noel"){
-        if(passwordEl.value == "noel"){
+        if(passwordEl.value == "fifi8000"){
             validationButtun.textContent = ("Validé");
             validationButtun.classList.add('hidden');
             forgetButtun.classList.add('hidden');
             startButtun.classList.remove('hidden');
+            stopButtun.classList.remove('hidden');
             accessButtun.classList.remove('hidden');
             historicalButtun.classList.remove('hidden');
             deconnectionButtun.classList.remove('hidden');
+            systemEl.classList.remove('hidden');
+            return;
+        }
+        else {
+            return;
+        }
+    }
+    else {
+    if(identityEl.value == "fripon.lutin"){
+        if(passwordEl.value == "brutionNRV"){
+            validationButtun.textContent = ("Validé");
+            validationButtun.classList.add('hidden');
+            forgetButtun.classList.add('hidden');
+            startButtun.classList.remove('hidden');
+            stopButtun.classList.remove('hidden');
+            accessButtun.classList.remove('hidden');
+            historicalButtun.classList.remove('hidden');
+            deconnectionButtun.classList.remove('hidden');
+            systemEl.classList.remove('hidden');
+            return;
+        }
+        else {
+            return;
+        }
+    }
+    if(identityEl.value == "tonton.noel"){
+        if(passwordEl.value == "englishbreakfast"){
+            validationButtun.textContent = ("Validé");
+            validationButtun.classList.add('hidden');
+            forgetButtun.classList.add('hidden');
+            startButtun.classList.remove('hidden');
+            stopButtun.classList.remove('hidden');
+            accessButtun.classList.remove('hidden');
+            historicalButtun.classList.remove('hidden');
+            deconnectionButtun.classList.remove('hidden');
+            systemEl.classList.remove('hidden');
+            return;
+        }
+        else {
+            return;
+        }
+    }
+    if(identityEl.value == "farfouille.lutin"){
+        if(passwordEl.value == "celouche"){
+            validationButtun.textContent = ("Validé");
+            validationButtun.classList.add('hidden');
+            forgetButtun.classList.add('hidden');
+            startButtun.classList.remove('hidden');
+            stopButtun.classList.remove('hidden');
+            accessButtun.classList.remove('hidden');
+            historicalButtun.classList.remove('hidden');
+            deconnectionButtun.classList.remove('hidden');
+            systemEl.classList.remove('hidden');
+            return;
+        }
+        else {
+            return;
+        }
+    }
+    if(identityEl.value == "flocon.noel"){
+        if(passwordEl.value == "areuh"){
+            validationButtun.textContent = ("Validé");
+            validationButtun.classList.add('hidden');
+            forgetButtun.classList.add('hidden');
+            startButtun.classList.remove('hidden');
+            stopButtun.classList.remove('hidden');
+            accessButtun.classList.remove('hidden');
+            historicalButtun.classList.remove('hidden');
+            deconnectionButtun.classList.remove('hidden');
+            systemEl.classList.remove('hidden');
+            return;
+        }
+        else {
+            return;
+        }
+    }
+    if(identityEl.value == "fils.noel"){
+        if(passwordEl.value == "scorbut123"){
+            validationButtun.textContent = ("Validé");
+            validationButtun.classList.add('hidden');
+            forgetButtun.classList.add('hidden');
+            startButtun.classList.remove('hidden');
+            stopButtun.classList.remove('hidden');
+            accessButtun.classList.remove('hidden');
+            historicalButtun.classList.remove('hidden');
+            deconnectionButtun.classList.remove('hidden');
+            systemEl.classList.remove('hidden');
+            return;
+        }
+        else {
+            return;
+        }
+    }
+    if(identityEl.value == "turlubricot.lutin"){
+        if(passwordEl.value == "easyrider"){
+            validationButtun.textContent = ("Validé");
+            validationButtun.classList.add('hidden');
+            forgetButtun.classList.add('hidden');
+            startButtun.classList.remove('hidden');
+            stopButtun.classList.remove('hidden');
+            accessButtun.classList.remove('hidden');
+            historicalButtun.classList.remove('hidden');
+            deconnectionButtun.classList.remove('hidden');
+            systemEl.classList.remove('hidden');
             return;
         }
         else {
@@ -252,7 +397,13 @@ function verificate() {
     else {
         return;
     }
-}
+    }
+    }
+    
+    
+       
+
+
 
 accessButtun.addEventListener("click", ()=> {
     startimerUser();
@@ -276,7 +427,7 @@ function startimerUser (){
                 
                 return;
             }
-        }, 1800);
+        }, 1);
     }
 }
 
@@ -303,7 +454,7 @@ function startimerHistorical (){
                 
                 return;
             }
-        }, 7200);
+        }, 1);
     }
 }
 
